@@ -1,5 +1,7 @@
 package com.modal;
 
+import org.springframework.stereotype.Component;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@Component
 public class User {
 
 	@Id

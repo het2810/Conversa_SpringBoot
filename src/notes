@@ -1,2 +1,6 @@
 1:45 
 continue from AuthController
+
+2:15
+Authentication controller complete with authentication for signup and login but 1 error found:
+resolve error for construrctor of "User" Class
