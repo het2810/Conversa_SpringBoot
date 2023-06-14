@@ -10,9 +10,17 @@ there maybe issue in the implementation of query in the chatRepository for the b
 
 @Query("SELECT c FROM Chat c JOIN c.users u1 JOIN c.users u2 WHERE c.isGroup = false AND u1 = :user AND u2 = :reqUser")
 	public Chat findSingleChatByUserIds(@Param("user")User user,@Param("reqUser")User reqUser);
-
-
-
 -------------------------------------------
-3:36
-continue from chatController
+
+--------------------------------------Backend Completed--------------------------------------
+we divide our api into following parts :- (a) signup/Login
+										  (b) User Service and it's implementations
+										  (c) chat service and it's implementations
+										  (d) Message service and it's implementations
+
+during this we've also created required "Exceptions" ,"Repository","Modal","Request" &
+"Responses"
+
+this is a basic chat doing API and can be integrated to any chatting services 
+
+frontend of this backend is done in reactJs
