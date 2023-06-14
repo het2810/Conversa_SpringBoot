@@ -1,6 +1,5 @@
 package com.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,44 +28,35 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AuthController {
 
-	@Autowired
-	UserRepository userRepository;
-	
-	@Autowired
-	User createdUser;
-	
-	@Autowired
-	CustomUserService customUserService;
-	
-	@Autowired
-	PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	TokenProvider tokenProvider;
-	
-	@PostMapping("/signup")
-	public ResponseEntity<AuthResponse> createUserHandler (@RequestBody User user) throws UserException{
-		
-		String email = user.getEmail();
-		String password = user.getPassword();
-		String fullName = user.getFullName();
-		User isuser = userRepository.findByEmail(email);
-		
-		if(isuser != null) {
-			throw new UserException("This email belongs to another email : "+email);
-		}
-		createdUser.setEmail(email);
-		createdUser.setFullName(fullName);
-		createdUser.setPassword(passwordEncoder.encode(password));
-		userRepository.save(createdUser);
-		
-		Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = tokenProvider.generateToken(authentication);
-		AuthResponse res = new AuthResponse(jwt, true);
-		
-		return new ResponseEntity<AuthResponse>(res,HttpStatus.ACCEPTED);
-	}
+	private final UserRepository userRepository;
+    private final CustomUserService customUserService;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
+
+    @PostMapping("/signup")
+    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws UserException {
+        String email = user.getEmail();
+        String password = user.getPassword();
+        String fullName = user.getFullName();
+        User isUser = userRepository.findByEmail(email);
+
+        if (isUser != null) {
+            throw new UserException("This email belongs to another user: " + email);
+        }
+
+        User createdUser = new User();
+        createdUser.setEmail(email);
+        createdUser.setFullName(fullName);
+        createdUser.setPassword(passwordEncoder.encode(password));
+        userRepository.save(createdUser);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = tokenProvider.generateToken(authentication);
+        AuthResponse res = new AuthResponse(jwt, true);
+
+        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+    }
 	
 	public ResponseEntity<AuthResponse> loginUserHandler (@RequestBody LoginRequest req){
 		
@@ -83,10 +73,10 @@ public class AuthController {
 	
 	}
 	
-	public Authentication authenticate (String UserName,String password) {
-		UserDetails userDetails = customUserService.loadUserByUsername(UserName);
+	public Authentication authenticate (String userName,String password) {
+		UserDetails userDetails = customUserService.loadUserByUsername(userName);
 		
-		if(userDetails !=null) {
+		if(userDetails ==null) {
 			throw new BadCredentialsException("Invalid UserName");
 		}
 		if(!passwordEncoder.matches(password, userDetails.getPassword())) {

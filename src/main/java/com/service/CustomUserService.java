@@ -14,7 +14,9 @@ import com.modal.User;
 import com.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Service
 public class CustomUserService implements UserDetailsService {

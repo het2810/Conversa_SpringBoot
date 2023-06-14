@@ -14,7 +14,9 @@ import com.repository.UserRepository;
 import com.request.UpdateUserRequest;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Service
 public class UserServiceImplementation implements UserService{

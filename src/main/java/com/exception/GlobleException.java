@@ -29,6 +29,14 @@ public class GlobleException {
 		return new ResponseEntity<ErrorDetails>(error, HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(ChatException.class)
+	public ResponseEntity<ErrorDetails> chatExceptionHandler(ChatException e, WebRequest req) {
+
+		ErrorDetails error = new ErrorDetails(e.getMessage(), req.getDescription(false), LocalDateTime.now());
+
+		return new ResponseEntity<ErrorDetails>(error, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorDetails> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e, WebRequest req) {
 
