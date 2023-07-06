@@ -28,38 +28,45 @@ public class UserServiceImplementation implements UserService{
 	TokenProvider tokenProvider;
 	
 	@Override
-	public User findUserById(Integer id) throws UserException {
-		Optional<User>opt=userRepository.findById(id);
+	public User findUserById(Integer userId) throws UserException {
+		
+		Optional<User> opt=userRepository.findById(userId);
+		
+		if(opt.isPresent()) {
+			User user=opt.get();
+			
+			return user;
+		}
+		throw new UserException("user not exist with id "+userId);
+	}
+
+	@Override
+	public User findUserProfile(String jwt) {
+		String email = tokenProvider.getEmailFromToken(jwt);
+		
+		Optional<User> opt=userRepository.findByEmail(email);
+		
 		if(opt.isPresent()) {
 			return opt.get();
 		}
-		throw new UserException("User not fount with Id = "+id);
+		
+		throw new BadCredentialsException("recive invalid token");
 	}
 
-	@Override
-	public User findUserProfile(String jwt) throws UserException {
-		String email = tokenProvider.getEmailFromToken(jwt);
-		if(email == null) {
-			throw new BadCredentialsException("Invalid Token Recieved..........");
-		}
-		
-		User user = userRepository.findByEmail(email);
-		
-		if(user == null) {
-			throw new UserException("User not found with email : "+email);
-		}
-		return user;
-	}
 
 	@Override
 	public User updateUser(Integer userId, UpdateUserRequest req) throws UserException {
-		User user = findUserById(userId);
 		
-		if(req.getFullName() != null) {
-			user.setFullName(req.getFullName());
+		System.out.println("update find user ------- ");
+		User user=findUserById(userId);
+		
+		System.out.println("update find user ------- "+user);
+		
+		if(req.getFull_name()!=null) {
+			user.setFull_name(req.getFull_name());
 		}
-		if(req.getProfilePicture() != null) {
-			user.setProfilePicture(req.getProfilePicture());
+		if(req.getProfile_picture()!=null) {
+			user.setProfile_picture(req.getProfile_picture());
 		}
 		
 		return userRepository.save(user);
@@ -67,8 +74,8 @@ public class UserServiceImplementation implements UserService{
 
 	@Override
 	public List<User> searchUser(String query) {
-		List<User> users = userRepository.searchUser(query);
-		return users;
+		return userRepository.searchUser(query);
+		
 	}
 
 }

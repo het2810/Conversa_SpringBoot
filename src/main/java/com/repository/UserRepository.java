@@ -1,6 +1,7 @@
 package com.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,8 @@ import com.modal.User;
 
 public interface UserRepository extends  JpaRepository<User, Integer>{
 
-	public User findByEmail(String email);
-	@Query("select u from User u where u.fullName like %:query% or u.email like %:query%")
-	public List<User> searchUser(@Param("query") String query);
+	public Optional<User> findByEmail(String email);
+	
+	@Query("SELECT u FROM User u WHERE u.full_name LIKE %:name%")
+	List<User> searchUsers(@Param("name") String name);
 }

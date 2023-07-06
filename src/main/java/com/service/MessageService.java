@@ -11,11 +11,12 @@ import com.request.SendMessageRequest;
 
 public interface MessageService {
 
-	public Message sendMessage(SendMessageRequest req) throws UserException,ChatException;
+public Message sendMessage(SendMessageRequest req) throws UserException, ChatException;
 	
-	public List<Message> getChatsMessages(Integer chatId , User reqUser) throws ChatException, UserException;
+	public List<Message> getChatsMessages(Integer chatId) throws ChatException;
 	
-	public Message findMessageById (Integer messageId) throws MessageException;
+	public Message findMessageById(Integer messageId) throws MessageException;
 	
-	public void deleteMessage (Integer messageId , User reqUser) throws MessageException, UserException;
+	public String deleteMessage(Integer messageId) throws MessageException;
+
 }

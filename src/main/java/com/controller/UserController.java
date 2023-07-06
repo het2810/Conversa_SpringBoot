@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,46 +12,60 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.controller.mapper.UserDtoMapper;
+import com.dto.UserDto;
 import com.exception.UserException;
 import com.modal.User;
 import com.request.UpdateUserRequest;
-import com.response.ApiResponse;
 import com.service.UserService;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+	
 	@Autowired
-	UserService userService;
+	private UserService userService;
+	
+	
+	@PutMapping("/update/{userId}")
+	public ResponseEntity<UserDto> updateUserHandler(@RequestBody UpdateUserRequest req, @PathVariable Integer userId) throws UserException{
+		System.out.println("updated user -------- ");
+		User updatedUser=userService.updateUser(userId, req);
+		UserDto userDto=UserDtoMapper.toUserDTO(updatedUser);
+
+		return new ResponseEntity<UserDto>(userDto,HttpStatus.OK);
+	}
 	
 	@GetMapping("/profile")
-	public ResponseEntity<User> getUserProfileHandler(@RequestHeader("Authorization") String token) throws UserException{
+	public ResponseEntity<UserDto> getUserProfileHandler(@RequestHeader("Authorization")String jwt) throws UserException{
+		System.out.println("req profile ----- ");
 		
-		User user = userService.findUserProfile(token);
+		User user=userService.findUserProfile(jwt);
 		
-		return new ResponseEntity<User>(user,HttpStatus.ACCEPTED);
+		UserDto userDto=UserDtoMapper.toUserDTO(user);
 		
+		System.out.println("req profile "+userDto.getEmail());
+		
+		return new ResponseEntity<UserDto>(userDto,HttpStatus.ACCEPTED);
 	}
 	
-	@GetMapping("{query}")
-	public ResponseEntity<List<User>> searchUserHandler(@PathVariable("query") String q){
-		List<User> users = userService.searchUser(q);
+	@GetMapping("/search")
+    public ResponseEntity<HashSet<UserDto>> searchUsersByName(@RequestParam("name") String name) {
 		
-		return new ResponseEntity<List<User>>(users,HttpStatus.OK);
-	}
-	
-	@PutMapping("/update")
-	public ResponseEntity<ApiResponse> updateUserHandler(@RequestBody UpdateUserRequest req,@RequestHeader("Authorization") String token) throws UserException{
-		User user = userService.findUserProfile(token);
-		userService.updateUser(user.getId(), req);
-		ApiResponse res = new ApiResponse("User updated Successfully.....",true);
+		System.out.println("search user ------- ");
 		
-		return new ResponseEntity<ApiResponse>(res,HttpStatus.ACCEPTED);
-	}
-	
+        List<User> users=userService.searchUser(name);
+        
+        HashSet<User> set=new HashSet<>(users);
+        
+        HashSet<UserDto> userDtos=UserDtoMapper.toUserDtos(set);
+        
+        System.out.println("search result ------ "+userDtos);
+        
+		return new ResponseEntity<>(userDtos,HttpStatus.ACCEPTED);
+    }
+
 }

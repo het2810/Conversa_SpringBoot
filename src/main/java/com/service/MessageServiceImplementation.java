@@ -13,71 +13,71 @@ import com.exception.UserException;
 import com.modal.Chat;
 import com.modal.Message;
 import com.modal.User;
-import com.repository.ChatRepository;
 import com.repository.MessageRepository;
 import com.request.SendMessageRequest;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 @Service
-@AllArgsConstructor
-@NoArgsConstructor
 public class MessageServiceImplementation implements MessageService{
+	
+	@Autowired
+	private MessageRepository messageRepo;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private ChatService chatService;
+	
+	  
 
-	@Autowired
-	MessageRepository messageRepository;
-	
-	@Autowired
-	UserService userService;
-	
-	@Autowired
-	ChatService chatService;
-	
-	
 	@Override
 	public Message sendMessage(SendMessageRequest req) throws UserException, ChatException {
-		User user = userService.findUserById(req.getUserId());
-		Chat chat = chatService.findChatById(req.getChatId());
 		
-		Message msg = new Message();
-		msg.setUser(user);
-		msg.setChat(chat);
-		msg.setContent(req.getContent());
-		msg.setTimeStamp(LocalDateTime.now());
+		System.out.println("send message ------- ");
 		
-		return msg;
+		User user=userService.findUserById(req.getUserId());
+		Chat chat=chatService.findChatById(req.getChatId());
+		
+		Message message=new Message();
+		message.setChat(chat);
+		message.setUser(user);
+		message.setContent(req.getContent());
+		message.setTimeStamp(LocalDateTime.now());
+		message.setIs_read(false);
+		
+		
+		return messageRepo.save(message);
 	}
 
 	@Override
-	public List<Message> getChatsMessages(Integer chatId , User reqUser) throws ChatException, UserException {
+	public String deleteMessage(Integer messageId) throws MessageException {
 		
-		Chat chat = chatService.findChatById(chatId);
-		 if(!chat.getUsers().contains(reqUser)) {
-			 throw new UserException("You are not reeted to this chat "+chat.getId());
-		 }
+		Message message=findMessageById(messageId);
 		
-		List<Message> msg = messageRepository.findChatById(chat.getId());
+		messageRepo.deleteById(message.getId());
 		
-		return msg;
+		return "message deleted successfully";
+	}
+
+	@Override
+	public List<Message> getChatsMessages(Integer chatId) throws ChatException {
+		
+//		Chat chat=chatService.findChatById(chatId);
+		
+		List<Message> messages=messageRepo.findMessageByChatId(chatId);
+		
+		return messages;
 	}
 
 	@Override
 	public Message findMessageById(Integer messageId) throws MessageException {
-		Optional<Message> opt = messageRepository.findById(messageId);
-		if(opt.isPresent()) {
-			return opt.get();
+		
+		Optional<Message> message =messageRepo.findById(messageId);
+		
+		if(message.isPresent()) {
+			return message.get();
 		}
-		throw new MessageException("Message Not Found with MessageId : "+messageId);
-	}
-
-	@Override
-	public void deleteMessage(Integer messageId,User reqUser) throws MessageException, UserException {
-		Message msg = findMessageById(messageId);
-		if(msg.getUser().getId().equals(reqUser.getId())) {
-			messageRepository.deleteById(messageId);
-		}
-		throw new UserException("You cannot delete other users message "+reqUser.getFullName());
+		throw new MessageException("message not exist with id "+messageId);
 	}
 
 }

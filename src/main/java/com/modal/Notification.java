@@ -2,36 +2,35 @@ package com.modal;
 
 import java.time.LocalDateTime;
 
+
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+@NoArgsConstructor
+@Setter
+@Getter
+@Entity
+public class Notification {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private String content;
+	private String message;
+	private Boolean is_seen;
+	private LocalDateTime timestamp;
 	
-	private LocalDateTime timeStamp;
-	private Boolean is_read;
-	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
-	
-	@ManyToOne
-	@JoinColumn(name="chat_id")
-	private Chat chat;
+
 	
 }

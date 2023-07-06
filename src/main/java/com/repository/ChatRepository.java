@@ -11,9 +11,9 @@ import com.modal.User;
 
 public interface ChatRepository extends JpaRepository<Chat, Integer> {
 
-	@Query("select c from Chat c join c.users u where u.id =: userId")
-	public List<Chat> findChatByUserId(@Param("userId") Integer userId);
+	@Query("select c from Chat c join c.users u where u.id=:userId")
+	public List<Chat> findChatByUserId(Integer userId);
 	
-	@Query("SELECT c FROM Chat c JOIN c.users u1 JOIN c.users u2 WHERE c.isGroup = false AND u1 = :user AND u2 = :reqUser")
-	public Chat findSingleChatByUserIds(@Param("user")User user,@Param("reqUser")User reqUser);
+	@Query("select c from Chat c Where c.is_group=false And :user Member of c.users And :reqUser Member of c.users")
+	public Chat findSingleChatByUsersId(@Param("user")User user, @Param("reqUser")User reqUser);
 }

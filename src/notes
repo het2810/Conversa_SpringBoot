@@ -24,3 +24,14 @@ during this we've also created required "Exceptions" ,"Repository","Modal","Requ
 this is a basic chat doing API and can be integrated to any chatting services 
 
 frontend of this backend is done in reactJs
+
+chatController line 61 pathVariable !!
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------
+If any issue come Check for ChatRepository
