@@ -33,7 +33,7 @@ public class ChatServiceImplementation implements ChatService {
 		
 //		System.out.println("before isChatExist");
 		
-		Chat isChatExist = chatRepo.findSingleChatByUserIds(user2, reqUser);
+		Chat isChatExist = chatRepo.findSingleChatByUsersId(user2, reqUser);
 		
 //		System.out.println("isChatExist ----------------------------- "+isChatExist);
 		

@@ -11,7 +11,7 @@ import com.request.SendMessageRequest;
 
 public interface MessageService {
 
-public Message sendMessage(SendMessageRequest req) throws UserException, ChatException;
+	public Message sendMessage(SendMessageRequest req) throws UserException, ChatException;
 	
 	public List<Message> getChatsMessages(Integer chatId) throws ChatException;
 	
