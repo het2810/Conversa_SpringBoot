@@ -38,7 +38,7 @@ public class MessageController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<MessageDto> sendMessageHandler(@RequestHeader("Authorization")String jwt,  @RequestBody SendMessageRequest req) throws UserException, ChatException{
-		
+		System.out.println("==================");
 		User reqUser=userService.findUserProfile(jwt);
 		
 		req.setUserId(reqUser.getId());
@@ -46,19 +46,15 @@ public class MessageController {
 		Message message=messageService.sendMessage(req);
 		
 		MessageDto messageDto=MessageDtoMapper.toMessageDto(message);
-		
+		System.out.println("this => "+req.getChatId());
 		return new ResponseEntity<MessageDto>(messageDto,HttpStatus.OK);
 	}
 	
 	@GetMapping("/chat/{chatId}")
-	public ResponseEntity<List<MessageDto>> getChatsMessageHandler(@PathVariable Integer chatId) throws ChatException{
-		
-		List<Message> messages=messageService.getChatsMessages(chatId);
-		
-		List<MessageDto> messageDtos=MessageDtoMapper.toMessageDtos(messages);
-		
-		return new ResponseEntity<List<MessageDto>>(messageDtos,HttpStatus.ACCEPTED);
-		
+	public ResponseEntity<List<MessageDto>> getChatsMessageHandler(@PathVariable Integer chatId) throws ChatException {
+	    List<Message> messages = messageService.getChatsMessages(chatId);
+	    List<MessageDto> messageDtos = MessageDtoMapper.toMessageDtos(messages);
+	    return ResponseEntity.status(HttpStatus.OK).body(messageDtos);
 	}
 	
 	@DeleteMapping("/{messageId}")

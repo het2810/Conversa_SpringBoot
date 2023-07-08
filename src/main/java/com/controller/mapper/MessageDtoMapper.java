@@ -28,16 +28,13 @@ public class MessageDtoMapper {
 		return messageDto;
 	}
 	
-	public static List<MessageDto> toMessageDtos(List<Message> messages){
-		
-		List<MessageDto> messageDtos=new ArrayList<>();
-		
-		for(Message message : messages) {
-			MessageDto messageDto=toMessageDto(message);
-			messageDtos.add(messageDto);
-		}
-		
-		return messageDtos;
+	public static List<MessageDto> toMessageDtos(List<Message> messages) {
+	    List<MessageDto> messageDtos = new ArrayList<>();
+	    for (Message message : messages) {
+	        MessageDto messageDto = toMessageDto(message);
+	        messageDtos.add(messageDto);
+	    }
+	    return messageDtos;
 	}
 
 }
