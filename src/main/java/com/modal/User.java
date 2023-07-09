@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,6 +35,9 @@ public class User {
 	
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 	private List<Notification> notifications=new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	private List<Status> status = new ArrayList<>();
 	
 	@Override
 	public String toString() {

@@ -37,6 +37,14 @@ public class GlobleException {
 		return new ResponseEntity<ErrorDetails>(error, HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(StatusException.class)
+	public ResponseEntity<ErrorDetails> statusExceptionHandler(StatusException e, WebRequest req) {
+		
+		ErrorDetails error = new ErrorDetails(e.getMessage(), req.getDescription(false), LocalDateTime.now());
+		
+		return new ResponseEntity<ErrorDetails>(error, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorDetails> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e, WebRequest req) {
 

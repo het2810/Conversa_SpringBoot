@@ -61,7 +61,7 @@ public class MessageServiceImplementation implements MessageService{
 
 	@Override
 	public List<Message> getChatsMessages(Integer chatId) throws ChatException {
-	    // Assuming you have a valid chatService implementation
+	    
 	    Chat chat = chatService.findChatById(chatId);
 	    if (chat == null) {
 	        throw new ChatException("Chat not found with ID: " + chatId);
